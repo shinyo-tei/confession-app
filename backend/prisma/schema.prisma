@@ -1,0 +1,76 @@
+// backend/prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-py"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://user:password@localhost:5432/confession_db"
+}
+
+// --- メインのモデル ---
+
+model User {
+  id        Int      @id @default(autoincrement())
+  nickname  String
+  passphrase String  @unique
+  auth_token String  @unique
+  avatar_id  Int
+  created_at DateTime @default(now())
+
+  // このユーザーがした告白 (一対多の関係)
+  posted_confessions Confession[] @relation("UserConfessions")
+
+  // このユーザーがしたリアクション (一対多の関係)
+  reactions Reaction[]
+
+  // このユーザーが閲覧した告白 (多対多の関係)
+  viewed_confessions ViewHistory[]
+}
+
+model Confession {
+  id         Int      @id @default(autoincrement())
+  content    String
+  view_count Int      @default(0)
+  status     String   @default("active")
+  created_at DateTime @default(now())
+
+  // この告白をしたユーザー (Userモデルとの繋がり)
+  user_id Int
+  user    User @relation("UserConfessions", fields: [user_id], references: [id])
+
+  // この告白についたリアクション (一対多の関係)
+  reactions Reaction[]
+
+  // この告白を閲覧したユーザー (多対多の関係)
+  viewed_by_users ViewHistory[]
+}
+
+model Reaction {
+  id            Int      @id @default(autoincrement())
+  emoji_content String
+  created_at    DateTime @default(now())
+
+  // このリアクションをしたユーザー (Userモデルとの繋がり)
+  user_id       Int
+  user          User     @relation(fields: [user_id], references: [id])
+
+  // このリアクションがついた告白 (Confessionモデルとの繋がり)
+  confession_id Int
+  confession    Confession @relation(fields: [confession_id], references: [id])
+
+  // 同じユーザーは同じ投稿に一度しかリアクションできないようにする
+  @@unique([user_id, confession_id])
+}
+
+// 閲覧履歴を管理するための中間テーブル (多対多)
+model ViewHistory {
+  user          User       @relation(fields: [user_id], references: [id])
+  user_id       Int
+  confession    Confession @relation(fields: [confession_id], references: [id])
+  confession_id Int
+
+  // 複合主キー (同じユーザーが同じ告白を複数回閲覧しても記録は1つ)
+  @@id([user_id, confession_id])
+}
