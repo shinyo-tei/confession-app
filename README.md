@@ -1,5 +1,8 @@
 # 匿名告白Webアプリ「Confession Bottle」
 
+使用動画  
+https://github.com/user-attachments/assets/3c622539-2638-471c-a29b-40875cb0aa4f
+
 ## 🌱 開発の背景：学生文化の復活と持続可能な仕組みづくり
 
 このアプリの着想は、私の大学に存在した非公式のInstagramアカウント「ICU Confessions」にあります。
