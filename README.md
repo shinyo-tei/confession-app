@@ -1,7 +1,10 @@
 # 匿名告白Webアプリ「Confession Bottle」
+アプリの使用動画
 
-使用動画  
-https://github.com/user-attachments/assets/3c622539-2638-471c-a29b-40875cb0aa4f
+https://github.com/user-attachments/assets/b1a9788a-e400-46f3-92de-e16f72986b9e
+
+
+
 
 ## 🌱 開発の背景：学生文化の復活と持続可能な仕組みづくり
 
